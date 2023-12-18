@@ -1,0 +1,6 @@
+outs:
+- md5: a6dfb7bf64d5071fc707c730b17aefe9.dir
+  size: 1347515037
+  nfiles: 7
+  hash: md5
+  path: camembert_mad_v1
