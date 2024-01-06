@@ -29,8 +29,8 @@ conda install pytorch==1.12.1 cudatoolkit=11.3 -c pytorch
 
 Set .env file to run bot in a discord server
 ```python
-DISCORD_CLIENT_ID=<DISCORD_CLIENT_ID>
-DISCORD_TOKEN=<DISCORD_BOT_TOKEN>
+DISCORD_CLIENT_ID=your_discord_client_id
+DISCORD_TOKEN=your_discord_bot_token
 DATABASE_FILE=data/database/discord.db
 MODEL_DIR=models/camembert_mad_v1
 ```

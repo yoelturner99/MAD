@@ -40,6 +40,11 @@ class MAD_Classifier():
             t = re.sub(r"\d*", "", t)
             t = re.sub(r"\s+", " ", t)
             instances.append(t)
-            
-        predictions = self.pipeline(instances)
+        
+        try:
+            predictions = self.pipeline(instances)
+        except Exception as e:
+            print("Erreur de classification")
+            return [{'label': 'Non clasifié', 'score': 1.0}]
+        
         return predictions

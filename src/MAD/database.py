@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 import sqlite3
+from discord.message import Message
 
 class MAD_Database():
     """An SQLite3 database to insert all messages in the channels 
     along with their corresponding labels (hateful or non-hateful)
     Schema of messages table:\n
-    msg_id | channel_id	| user_id | msg | label | score | date
+    msg_id | channel_id	| user_id | msg | msg_type |label | score | date
 
     Schema of channels table:\n
     channel_id | name | num_users
@@ -39,6 +40,7 @@ class MAD_Database():
                     channel_id TEXT NOT NULL,
                     user_id TEXT,
                     msg TEXT,
+                    msg_type TEXT,
                     label TEXT,
                     score DOUBLE,
                     date TEXT
@@ -46,7 +48,7 @@ class MAD_Database():
                 """
             )
     
-    def insert_message(self, msg, pred):
+    def insert_message(self, msg: Message, msg_type: str, pred: str):
         """
         Insert new messages and update records of previous messages
         in the database.
@@ -54,8 +56,8 @@ class MAD_Database():
 
         self.cursor.execute(
             """
-            INSERT INTO messages(msg_id, channel_id, user_id, msg, label, score, date)
-            VALUES ('{msg_id}', '{channel_id}', ?, ?, '{label}', {score}, '{date}')
+            INSERT INTO messages(msg_id, channel_id, user_id, msg, msg_type, label, score, date)
+            VALUES ('{msg_id}', '{channel_id}', ?, ?, '{msg_type}', '{label}', {score}, '{date}')
             ON CONFLICT(msg_id) DO UPDATE SET
                 msg = ?,
                 label = '{label}',
@@ -64,6 +66,7 @@ class MAD_Database():
             .format(
                 msg_id=msg.id,
                 channel_id=msg.channel.id,
+                msg_type=msg_type,
                 label=pred["label"],
                 score=pred["score"],
                 date=msg.created_at.strftime("%Y-%m-%dT%H:%M:%S")
