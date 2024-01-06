@@ -39,7 +39,7 @@ MODEL_DIR=models/camembert_mad_v1
 ### scripts/finetuning.py
 ```bash
 # To run the training script
-python ./scripts/finetuning.py --data_path ./data/text/final/train_data.tsv --model_name camembert_mad_vv1
+python ./scripts/finetuning.py --data_path ./data/text/final/train_data.tsv --model_name camembert_mad_v0
 
 # To run tensorboard for monitoring
 tensorboard --logdir=runs
