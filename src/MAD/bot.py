@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import os
 import io
 import tempfile
 from urllib.request import Request, urlopen
