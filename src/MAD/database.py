@@ -47,6 +47,7 @@ class MAD_Database():
                 )
                 """
             )
+        print("Database initialized !!!")
     
     def insert_message(self, msg: Message, msg_type: str, pred: str):
         """

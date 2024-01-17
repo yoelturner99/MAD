@@ -1,6 +1,7 @@
 .env
 .venv
 .vscode
+logs/
 data/audio/
 data/database/
 **/__pycache__

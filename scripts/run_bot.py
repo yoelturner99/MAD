@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import os
+import logging
 
 import discord
 from pydub import AudioSegment
@@ -22,6 +23,7 @@ AudioSegment.ffmpeg = f"{FFMPEG_BIN}/ffmpeg.exe"
 AudioSegment.ffprobe = f"{FFMPEG_BIN}/ffprobe.exe"
 
 if __name__ == "__main__":
+    handler = logging.FileHandler(filename='logs/discord.log', encoding='utf-8', mode='w')
     classifier = MAD_Classifier(MODEL_DIR)
     db = MAD_Database(DATABASE_FILE)
     db.initialize_database()
@@ -29,4 +31,8 @@ if __name__ == "__main__":
     intents = discord.Intents.default()
     intents.message_content = True
     client = MAD_Bot(intents, db, classifier)
-    client.run(token=DISCORD_TOKEN)
+    client.run(
+        token=DISCORD_TOKEN,
+        log_handler=handler,
+        log_level=logging.DEBUG
+    )

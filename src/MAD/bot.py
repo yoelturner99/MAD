@@ -99,6 +99,7 @@ class MAD_Bot(Client):
                     [channel.name, channel.name]
                 )
                 self.db.connexion.commit()
+                print("Database updated !!!")
 
                 # On récupère tous les messages du channel
                 messages = channel.history(limit=None, oldest_first=False)
