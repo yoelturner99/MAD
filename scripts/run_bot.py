@@ -23,7 +23,12 @@ AudioSegment.ffmpeg = f"{FFMPEG_BIN}/ffmpeg.exe"
 AudioSegment.ffprobe = f"{FFMPEG_BIN}/ffprobe.exe"
 
 if __name__ == "__main__":
-    handler = logging.FileHandler(filename='logs/discord.log', encoding='utf-8', mode='w')
+    handler = logging.FileHandler(
+        filename='logs/discord.log',
+        encoding='utf-8',
+        mode='w'
+    )
+    
     classifier = MAD_Classifier(MODEL_DIR)
     db = MAD_Database(DATABASE_FILE)
     db.initialize_database()

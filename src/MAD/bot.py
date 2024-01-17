@@ -99,7 +99,6 @@ class MAD_Bot(Client):
                     [channel.name, channel.name]
                 )
                 self.db.connexion.commit()
-                print("Database updated !!!")
 
                 # On récupère tous les messages du channel
                 messages = channel.history(limit=None, oldest_first=False)
@@ -107,10 +106,10 @@ class MAD_Bot(Client):
                     msg_type = "text"
                     if msg.attachments:
                         for att in msg.attachments:
-                            if "voice-message" in att.filename:
+                            if att.is_voice_message():
                                 # Recognize the audio
                                 msg.content = self.audio_to_text(att)
-                                msg_type = "audio"
+                                msg_type = "vocal"
 
                     # On refait une prédiction sur chaque ancien message au cas où on change de modèle
                     pred = self.classifier.predict(msg.content)[0]
@@ -118,15 +117,16 @@ class MAD_Bot(Client):
                     self.db.insert_message(msg, msg_type, pred)
 
                 self.db.connexion.commit()
+        print("Database updated !!!")
         
     async def on_message(self, msg: Message):
         msg_type = "text"
         if msg.attachments:
             for att in msg.attachments:
-                if "voice-message" in att.filename:
+                if att.is_voice_message():
                     # Recognize the audio
                     msg.content = self.audio_to_text(att)
-                    msg_type = "audio"
+                    msg_type = "vocal"
 
         pred = self.classifier.predict(msg.content)[0]
         pred["label"] = "haineux" if pred["label"] == "LABEL_1" else "non haineux"
