@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
-import re
 from transformers import TextClassificationPipeline
 from transformers import CamembertTokenizer, CamembertForSequenceClassification
+
+from .utils import clean_text
 
 class MAD_Classifier():
     """
@@ -29,22 +30,17 @@ class MAD_Classifier():
     def predict(self, text):
         if isinstance(text, str):
             text = [text]
-            
-        instances = []
-        for t in text:
-            # Ensure proper string format of text
-            t = str(t).lower() \
-                .replace("@user", "") \
-                .replace("@url", "")
-            t = re.sub(r"[\.,\?\!]", "", t)
-            t = re.sub(r"\d*", "", t)
-            t = re.sub(r"\s+", " ", t)
-            instances.append(t)
-        
+        # Ensure proper string format of text
+        instances = [clean_text(str(t)) for t in text]
         try:
             predictions = self.pipeline(instances)
+            for pred in predictions:
+                if pred["label"] == "LABEL_1":
+                    pred["label"] = "haineux"
+                else:
+                    pred["label"] = "non haineux"
         except Exception as e:
-            print("Erreur de classification")
+            print(f"Classification error due to : {e}")
             return [{'label': 'Non clasifié', 'score': 1.0}]
         
         return predictions

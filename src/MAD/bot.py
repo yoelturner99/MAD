@@ -113,8 +113,11 @@ class MAD_Bot(Client):
 
                     # On refait une prédiction sur chaque ancien message au cas où on change de modèle
                     pred = self.classifier.predict(msg.content)[0]
-                    pred["label"] = "haineux" if pred["label"] == "LABEL_1" else "non haineux"
-                    self.db.insert_message(msg, msg_type, pred)
+                    self.db.insert_message(
+                        msg=msg,
+                        msg_type=msg_type,
+                        pred=pred
+                    )
 
                 self.db.connexion.commit()
         print("Database updated !!!")
@@ -129,6 +132,9 @@ class MAD_Bot(Client):
                     msg_type = "vocal"
 
         pred = self.classifier.predict(msg.content)[0]
-        pred["label"] = "haineux" if pred["label"] == "LABEL_1" else "non haineux"
-        self.db.insert_message(msg, msg_type, pred)
+        self.db.insert_message(
+            msg=msg,
+            msg_type=msg_type,
+            pred=pred
+        )
         self.db.connexion.commit()

@@ -2,6 +2,8 @@
 import sqlite3
 from discord.message import Message
 
+from .utils import clean_text
+
 class MAD_Database():
     """An SQLite3 database to insert all messages in the channels 
     along with their corresponding labels (hateful or non-hateful)
@@ -72,5 +74,5 @@ class MAD_Database():
                 score=pred["score"],
                 date=msg.created_at.strftime("%Y-%m-%dT%H:%M:%S")
             ),
-            [str(msg.author), msg.content, msg.content]
+            [str(msg.author), clean_text(str(msg.content)), clean_text(str(msg.content))]
         )
