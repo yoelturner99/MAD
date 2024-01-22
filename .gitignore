@@ -1,6 +1,6 @@
 .env
 .venv
-logs/
+logs/discord.log
 data/audio/
 data/database/
 **/__pycache__
