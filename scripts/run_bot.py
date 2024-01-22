@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
-import sys
+# import sys
+# sys.path.insert(0, './src')
+import os
 import logging
-sys.path.insert(0, './src')
+from pathlib import Path
 
 import discord
 
@@ -15,10 +17,16 @@ from MAD import (
 )
 
 if __name__ == "__main__":
-    # Initialize classifier and database
-    classifier = MAD_Classifier(MODEL_DIR)
+    # Initialize database
+    if not os.path.exists(DATABASE_FILE):
+        path = Path(DATABASE_FILE)
+        os.makedirs(path.parent, exist_ok=True)
+        
     db = MAD_Database(DATABASE_FILE)
     db.initialize_database()
+
+    # Initialize Classifier
+    classifier = MAD_Classifier(MODEL_DIR)
 
     # Initialize Client
     intents = discord.Intents.default()
