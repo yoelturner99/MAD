@@ -2,6 +2,7 @@
 import sqlite3
 from discord.message import Message
 
+from .config import logger
 from .utils import clean_text
 
 class MAD_Database():
@@ -49,7 +50,7 @@ class MAD_Database():
                 )
                 """
             )
-        print("Database initialized !!!")
+        logger.info("Database initialized !!!")
     
     def insert_message(self, msg: Message, msg_type: str, pred: str):
         """

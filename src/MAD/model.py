@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
+
 from transformers import TextClassificationPipeline
 from transformers import CamembertTokenizer, CamembertForSequenceClassification
 
+from .config import logger
 from .utils import clean_text
+
 
 class MAD_Classifier():
     """
@@ -40,7 +43,7 @@ class MAD_Classifier():
                 else:
                     pred["label"] = "non haineux"
         except Exception as e:
-            print(f"Classification error due to : {e}")
+            logger.error(f"Classification error due to : {e}")
             return [{'label': 'Non clasifié', 'score': 1.0}]
         
         return predictions

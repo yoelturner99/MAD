@@ -9,6 +9,7 @@ from pydub import AudioSegment
 from discord import Intents, Client
 from discord.message import Message, Attachment
 
+from .config import logger
 from .model import MAD_Classifier
 from .database import MAD_Database
 
@@ -42,10 +43,10 @@ class MAD_Bot(Client):
         try:
             response = urlopen(request)
         except HTTPError as e:
-            print('Error code: ', e.code)
+            logger.error(f"Error code: {e.code}")
             return "Erreur de conversion"
         except URLError as e:
-            print('Reason: ', e.reason)
+            logger.error(f"Reason: {e.reason}")
             return "Erreur de conversion"
 
         # Read URL and convert to io
@@ -71,13 +72,13 @@ class MAD_Bot(Client):
         try:
             text =  r.recognize_google(audio, language="fr-FR")
         except Exception as e:
-            print(e)
+            logger.error(f"Conversion error for voice message : {attachement.id}")
             return "Erreur de conversion"
 
         return text
 
     async def on_ready(self):
-        print(f"Connecté à Discord en tant que {self.user}!")
+        logger.info(f"Connecté à Discord en tant que {self.user}!")
         for guild in self.guilds:
             # On récupère tous les channels de texte
             for channel in guild.text_channels:
@@ -119,7 +120,7 @@ class MAD_Bot(Client):
                     )
 
                 self.db.connexion.commit()
-        print("Database updated !!!")
+        logger.info("Database updated !!!")
         
     async def on_message(self, msg: Message):
         msg_type = "text"
