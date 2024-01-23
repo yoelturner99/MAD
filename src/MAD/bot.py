@@ -9,7 +9,7 @@ from pydub import AudioSegment
 from discord import Intents, Client
 from discord.message import Message, Attachment
 
-from .config import logger
+from . import logger
 from .model import MAD_Classifier
 from .database import MAD_Database
 

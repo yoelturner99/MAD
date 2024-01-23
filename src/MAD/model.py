@@ -3,7 +3,7 @@
 from transformers import TextClassificationPipeline
 from transformers import CamembertTokenizer, CamembertForSequenceClassification
 
-from .config import logger
+from . import logger
 from .utils import clean_text
 
 
