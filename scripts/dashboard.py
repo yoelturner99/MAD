@@ -2,19 +2,19 @@ import os
 import sqlite3
 from datetime import datetime
 
-from dotenv import load_dotenv
 import numpy as np
 import pandas as pd
 from PIL import Image
 import streamlit as st
 import plotly.express as px
+from dotenv import load_dotenv
 import plotly.graph_objects as go
 
 # Set environment variables
 load_dotenv()
 DATABASE_FILE = os.getenv("DATABASE_FILE")
 IMAGES_DIR = os.getenv("IMAGES_DIR")
-THRESHOLD =  15
+THRESHOLD =  int(os.getenv("THRESHOLD"))
 
 # Images path
 logo_path = f"{IMAGES_DIR}/logoDobby.png"
