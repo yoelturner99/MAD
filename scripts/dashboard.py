@@ -51,15 +51,6 @@ def calculate_negativity_level(df):
 connection = sqlite3.connect(DATABASE_FILE)
 # Convert sql database to dataframe
 df = pd.read_sql_query("SELECT * FROM messages", connection)
-# df = df.rename(
-#     columns={
-#         "user_id": "User",
-#         "msg": "Message",
-#         "label": "Sentiment",
-#         "msg_type": "MessageType",
-#         "date": "Timestamp"
-#     }
-# )
 df['Timestamp'] = pd.to_datetime(df['date'])
 df['Date'] = df['Timestamp'].dt.date
 df['Time'] = df['Timestamp'].dt.time
@@ -70,6 +61,7 @@ df['Type'] = df.apply(
 )
 # Suppression des messages vides
 df = df.dropna()
+df = df.sort_values(by=['Timestamp'], ascending=True)
 
 
 # Configuration de l'affichage de l'appli
