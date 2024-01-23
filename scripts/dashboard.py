@@ -14,6 +14,7 @@ import plotly.graph_objects as go
 load_dotenv()
 DATABASE_FILE = os.getenv("DATABASE_FILE")
 IMAGES_DIR = os.getenv("IMAGES_DIR")
+THRESHOLD =  15
 
 # Images path
 logo_path = f"{IMAGES_DIR}/logoDobby.png"
@@ -325,7 +326,16 @@ elif tabs == "Historique":
 df_haineux = df[df['label'] == 'haineux']
 
 # Identification les utilisateurs ayant envoyé plus de 15 messages haineux
-users_with_high_negativity = df_haineux['user_id'].value_counts()[df_haineux['user_id'].value_counts() > 15].index.tolist()
+users_with_high_negativity = df_haineux['user_id'].value_counts()[df_haineux['user_id'].value_counts() > THRESHOLD].index.tolist()
+
+# Yoel
+start_date_hist = st.sidebar.date_input("Date de début", min_value=df['Date'].min(), max_value=df['Date'].max(),
+                                            value=df['Date'].min(), key="sd")
+end_date_hist = st.sidebar.date_input("Date de fin", min_value=df['Date'].min(), max_value=df['Date'].max(),
+                                        value=df['Date'].max(), key="ed")
+# Convertir les valeurs en datetime64
+start_date_hist = np.datetime64(start_date_hist)
+end_date_hist = np.datetime64(end_date_hist)
 
 # Filtrer le DataFrame pour inclure uniquement ces utilisateurs dans une plage de dates spécifique
 filtered_df_toxic_user = df[df['user_id'].isin(users_with_high_negativity) &
@@ -338,12 +348,3 @@ negativity_rates = filtered_df_toxic_user.groupby('user_id').apply(calculate_neg
 # graphique à barres des personnes les plus toxiques
 st.subheader('Utilisateurs suspects')
 st.bar_chart(negativity_rates)
-
-
-
-
-
-
-
-
-    
