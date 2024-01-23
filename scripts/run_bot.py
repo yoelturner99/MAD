@@ -1,20 +1,23 @@
 # -*- coding: utf-8 -*-
+
 # import sys
 # sys.path.insert(0, './src')
+
 import os
-import logging
 from pathlib import Path
 
 import discord
+from dotenv import load_dotenv
 
 from MAD.bot import MAD_Bot
 from MAD.model import MAD_Classifier
 from MAD.database import MAD_Database
-from MAD import (
-    MODEL_DIR,
-    DISCORD_TOKEN,
-    DATABASE_FILE,
-)
+
+# Set environment variables
+load_dotenv()
+MODEL_DIR     = os.getenv("MODEL_DIR")
+DISCORD_TOKEN = os.getenv("DISCORD_TOKEN")
+DATABASE_FILE = os.getenv("DATABASE_FILE")
 
 if __name__ == "__main__":
     # Initialize database
@@ -33,16 +36,5 @@ if __name__ == "__main__":
     intents.message_content = True
     client = MAD_Bot(intents, db, classifier)
 
-    # Add handler for logging
-    handler = logging.FileHandler(
-        filename='logs/discord.log',
-        encoding='utf-8',
-        mode='w'
-    )
-
     # Run client 
-    client.run(
-        token=DISCORD_TOKEN,
-        log_handler=handler,
-        log_level=logging.DEBUG
-    )
+    client.run(token=DISCORD_TOKEN)
