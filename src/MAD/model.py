@@ -6,7 +6,6 @@ from transformers import CamembertTokenizer, CamembertForSequenceClassification
 from . import logger
 from .utils import clean_text
 
-
 class MAD_Classifier():
     """
     CamemBERT pipeline (Model + Tokenizer) to do binary classification

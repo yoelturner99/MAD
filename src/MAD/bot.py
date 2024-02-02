@@ -16,7 +16,6 @@ from . import logger
 from .model import MAD_Classifier
 from .database import MAD_Database
 
-
 class MAD_Bot(Client):
     """
     Discord Bot to classify messages in a channel as
