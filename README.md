@@ -1,15 +1,17 @@
 # MAD (Mon Ami Dobby)
 The aim is to offer an AI capable of identifying situations of cyber-harassment, insults or abusive language. This AI will be integrated into the Discord platform.
 
-## Environment (python 3.10)
+## Venv Installation (python 3.10)
 Using python and pip
 ```bash
 # Create venv
 python -m venv .venv/Scripts/activate
 # Activate venv in terminal
 ./.venv/Scripts/activate
-# Install packages
+# Install packages 
 pip install -r ./requirements.txt
+# To pull model and data from server
+dvc pull
 ```
 Using conda
 ```bash
@@ -17,8 +19,14 @@ Using conda
 conda env create --file environment.yml
 # Activate conda env
 conda activate mad-env
+# To pull model and data from server
+dvc pull
 ```
+## FFMPEG Installation
+**On Windows :** Run `notebooks/01_ffmpeg.ipynb` \
+**On Linux :** Run command ```bash apt-get install -y ffmpeg```
 
+## CUDA for PyTorch Installation
 To do training and inference on GPU, download pytorch-cuda version (https://pytorch.org/get-started/previous-versions/) with the following commands in the terminal :
 ```bash
 ## To install pytorch-cuda version
@@ -27,16 +35,15 @@ pip install torch==1.12.1+cu113 --extra-index-url https://download.pytorch.org/w
 conda install pytorch==1.12.1 cudatoolkit=11.3 -c pytorch
 ```
 
-Set .env file to run bot in a discord server
+## .env file
 ```python
+LOG_CONFIG=./logs/log_config.ini
 DISCORD_CLIENT_ID=your_discord_client_id
 DISCORD_TOKEN=your_discord_bot_token
-DATABASE_FILE=data/database/discord.db
-MODEL_DIR=models/camembert_mad_v1
 ```
 
 ## Scripts
-### scripts/finetuning.py
+#### scripts/finetuning.py
 ```bash
 # To run the training script
 python ./scripts/finetuning.py --data_path ./data/text/final/train_data.tsv --model_name camembert_mad_v0
@@ -45,14 +52,19 @@ python ./scripts/finetuning.py --data_path ./data/text/final/train_data.tsv --mo
 tensorboard --logdir=runs
 ```
 
-### scripts/testing.py
+#### scripts/testing.py
 ```bash
 python ./scripts/testing.py --data_path ./data/text/final/test_data.tsv --model_dir ./models/camembert_mad_v1
 ```
 
-### scripts/run_bot.py
+#### scripts/run_bot.py
 ```bash
 python ./scripts/run_bot.py
+```
+
+#### scripts/dashboard.py
+```bash
+streamlit run ./scripts/dashboard.py
 ```
 
 ## Datasets used from Hugging Face
