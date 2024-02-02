@@ -1,4 +1,3 @@
-import os
 import sqlite3
 from datetime import datetime
 
@@ -7,14 +6,12 @@ import pandas as pd
 from PIL import Image
 import streamlit as st
 import plotly.express as px
-from dotenv import load_dotenv
 import plotly.graph_objects as go
 
 # Set environment variables
-load_dotenv()
-DATABASE_FILE = os.getenv("DATABASE_FILE")
-IMAGES_DIR = os.getenv("IMAGES_DIR")
-THRESHOLD =  int(os.getenv("THRESHOLD"))
+THRESHOLD =  15
+IMAGES_DIR = "./data/images"
+DATABASE_FILE = "./data/database/discord.db"
 
 # Images path
 logo_path = f"{IMAGES_DIR}/logoDobby.png"

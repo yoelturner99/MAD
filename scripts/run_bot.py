@@ -15,9 +15,9 @@ from MAD.database import MAD_Database
 
 # Set environment variables
 load_dotenv()
-MODEL_DIR     = os.getenv("MODEL_DIR")
 DISCORD_TOKEN = os.getenv("DISCORD_TOKEN")
-DATABASE_FILE = os.getenv("DATABASE_FILE")
+MODEL_DIR     = "./models/camembert_mad_v1"
+DATABASE_FILE = "./data/database/discord.db"
 
 if __name__ == "__main__":
     # Initialize database

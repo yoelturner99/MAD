@@ -8,6 +8,8 @@ from urllib.error import URLError, HTTPError
 import speech_recognition
 from pydub import AudioSegment
 from discord import Intents, Client
+from discord import DMChannel
+from discord.errors import HTTPException
 from discord.message import Message, Attachment
 
 from . import logger
@@ -29,6 +31,7 @@ class MAD_Bot(Client):
         super().__init__(intents=intents)
         self.db = database
         self.classifier = classifier
+        self.WARNING_MESSAGE = "⚠️⚠️⚠️\nFaites attention, car ce message contient probablement des propos à caractère haineux :"
     
     callbacks = []
     def add_callback(self, callback):
@@ -77,6 +80,18 @@ class MAD_Bot(Client):
             return "Erreur de conversion"
 
         return text
+    
+    async def DM(self, msg: Message, msg_type: str) -> None:
+        if msg.content:
+            text = msg.content
+            date = msg.created_at.strftime("%Y-%m-%d à %H:%M:%S")
+            warn_msg = self.WARNING_MESSAGE + f'\n\n***«{text}»***'
+            warn_msg += f"\n\nEnvoyé le {date}"
+            warn_msg += f"Type de message: {msg_type}"
+            try:
+                await msg.author.send(warn_msg)
+            except HTTPException as e:
+                logger.debug(f"Discord bug to be ignored : {e}")
 
     async def on_ready(self):
         logger.info(f"Connecté à Discord en tant que {self.user}!")
@@ -104,38 +119,43 @@ class MAD_Bot(Client):
                 # On récupère tous les messages du channel
                 messages = channel.history(limit=None, oldest_first=False)
                 async for msg in messages:
-                    msg_type = "text"
-                    if msg.attachments:
-                        for att in msg.attachments:
-                            if att.is_voice_message():
-                                # Recognize the audio
-                                msg.content = self.audio_to_text(att)
-                                msg_type = "vocal"
+                    if msg.author != self.user:
+                        msg_type = "text"
+                        if msg.attachments:
+                            for att in msg.attachments:
+                                if att.is_voice_message():
+                                    # Recognize the audio
+                                    msg.content = self.audio_to_text(att)
+                                    msg_type = "vocal"
 
-                    # On refait une prédiction sur chaque ancien message au cas où on change de modèle
-                    pred = self.classifier.predict(msg.content)[0]
-                    self.db.insert_message(
-                        msg=msg,
-                        msg_type=msg_type,
-                        pred=pred
-                    )
+                        # On refait une prédiction sur chaque ancien message au cas où on change de modèle
+                        pred = self.classifier.predict(msg.content)[0]
+                        self.db.insert_message(
+                            msg=msg,
+                            msg_type=msg_type,
+                            pred=pred
+                        )
 
-                self.db.connexion.commit()
+                    self.db.connexion.commit()
         logger.info("Database updated !!!")
         
     async def on_message(self, msg: Message):
-        msg_type = "text"
-        if msg.attachments:
-            for att in msg.attachments:
-                if att.is_voice_message():
-                    # Recognize the audio
-                    msg.content = self.audio_to_text(att)
-                    msg_type = "vocal"
+        if not isinstance(msg.channel, DMChannel):
+            msg_type = "text"
+            if msg.attachments:
+                for att in msg.attachments:
+                    if att.is_voice_message():
+                        # Recognize the audio
+                        msg.content = self.audio_to_text(att)
+                        msg_type = "vocal"
 
-        pred = self.classifier.predict(msg.content)[0]
-        self.db.insert_message(
-            msg=msg,
-            msg_type=msg_type,
-            pred=pred
-        )
-        self.db.connexion.commit()
+            pred = self.classifier.predict(msg.content)[0]
+            if pred["label"] == "haineux":
+                await self.DM(msg, msg_type)
+
+            self.db.insert_message(
+                msg=msg,
+                msg_type=msg_type,
+                pred=pred
+            )
+            self.db.connexion.commit()
