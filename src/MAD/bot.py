@@ -87,7 +87,7 @@ class MAD_Bot(Client):
             date = msg.created_at.strftime("%Y-%m-%d à %H:%M:%S")
             warn_msg = self.WARNING_MESSAGE + f'\n\n***«{text}»***'
             warn_msg += f"\n\nEnvoyé le {date}"
-            warn_msg += f"Type de message: {msg_type}"
+            warn_msg += f"\nType de message: {msg_type}"
             try:
                 await msg.author.send(warn_msg)
             except HTTPException as e:
