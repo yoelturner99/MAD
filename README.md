@@ -5,7 +5,7 @@ The aim is to offer an AI capable of identifying situations of cyber-harassment,
 Using python and pip
 ```bash
 # Create venv
-python -m venv .venv/Scripts/activate
+python -m venv .venv
 # Activate venv in terminal
 ./.venv/Scripts/activate
 # Install packages 
